@@ -30,6 +30,7 @@ class AuthController extends Controller
             'message' => 'Login successful',
             'user' => auth()->user(),
             'token' => auth()->user()->createToken('authToken')->plainTextToken,
+            'role' => auth()->user()->getRoleNames()->first(),
         ], 200);
     }
 
@@ -52,6 +53,9 @@ class AuthController extends Controller
             'password' => bcrypt($validation['password']),
         ]);
 
+        //assign role
+        $user->assignRole('user');
+
         //return response
         return response()->json([
             'message' => 'User created successfully',
@@ -73,5 +77,27 @@ class AuthController extends Controller
             'message' => 'Logout successful',
         ], 200);
     }
+
+    public function profile()
+{
+    // Mendapatkan pengguna yang sedang login
+    $user = auth()->user();
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'Unauthorized',
+        ], 401);
+    }
+
+    // Mengambil daftar playlist yang dimiliki oleh pengguna
+    $playlists = $user->playlists()->select('id_playlist', 'nama_playlist')->get();
+
+    return response()->json([
+        'message' => 'Profile retrieved successfully',
+        'user' => $user,
+        'playlists' => $playlists,
+    ], 200);
+}
+
 
 }

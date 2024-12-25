@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\MusicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +22,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::controller(\App\Http\Controllers\AuthController::class)->group(function () {
+Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::post('/register', 'register');
     Route::post('/logout', 'logout')->middleware('auth:sanctum');
+    Route::get('/profile', 'profile')->middleware('auth:sanctum');
 });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('playlists', PlaylistController::class);
+});
+
+Route::apiResource('musics', MusicController::class);
+
+Route::get('/musics/search', [MusicController::class, 'search']);
