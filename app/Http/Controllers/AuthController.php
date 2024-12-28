@@ -90,7 +90,7 @@ class AuthController extends Controller
     }
 
     // Mengambil daftar playlist yang dimiliki oleh pengguna
-    $playlists = $user->playlists()->select('id_playlist', 'nama_playlist')->get();
+    $playlists = $user->playlists()->select('id_playlist', 'nama_playlist', 'img_playlist')->get();
 
     return response()->json([
         'message' => 'Profile retrieved successfully',

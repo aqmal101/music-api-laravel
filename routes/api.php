@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\MusicController;
+use App\Http\Controllers\PlaylistDetailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('musics', MusicController::class);
 
 Route::get('/musics/search', [MusicController::class, 'search']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('playlist/{playlistId}/add-music', [PlaylistDetailController::class, 'addMusicToPlaylist']);
+    Route::post('playlist/{playlistId}/remove-music', [PlaylistDetailController::class, 'removeMusicFromPlaylist']);
+    Route::get('playlist/{playlistId}/musics', [PlaylistDetailController::class, 'getMusicInPlaylist']);
+    Route::post('playlist/{playlistId}/update-music', [PlaylistDetailController::class, 'updateMusicInPlaylist']);
+});
